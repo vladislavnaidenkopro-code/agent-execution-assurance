@@ -1,0 +1,81 @@
+name: Package verified synthetic research snapshot
+
+on:
+  push:
+    branches:
+      - package/preprint-software-20261029
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact reviewed commit, never moving branch head
+        uses: actions/checkout@v7
+        with:
+          ref: 53f1d4963d604b8d6e108386ebd2f4aebbd2daf6
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Install Python for reproducibility
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Assert source identity and execute tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "53f1d4963d604b8d6e108386ebd2f4aebbd2daf6"
+          mkdir -p dist
+          python -m unittest discover -s . -p 'test_*.py' -v > dist/UNITTEST_3.13.log 2>&1
+          grep -F "Ran 104 tests" dist/UNITTEST_3.13.log
+          python reproduce_results.py > dist/model_results.json
+          python reproduce_results.py --verify dist/model_results.json
+          python - <<'PY'
+          import json, hashlib
+          from reproduce_results import model_data, sha256_manifest
+          expected='107cd7814ed89696f2539373c25b027961d7382beb0aa3820933a73cca761f94'
+          assert sha256_manifest(model_data()) == expected
+          print('Exact model results digest verified: '+ expected)
+          PY
+      - name: Make immutable source archive and content manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          git archive --format=zip --prefix=agent-execution-assurance-53f1d496/ \
+            -o dist/agent-execution-assurance-source-53f1d496.zip HEAD
+          unzip -t dist/agent-execution-assurance-source-53f1d496.zip | tail -1
+          python - <<'PY'
+          import json, pathlib, hashlib
+          folder=pathlib.Path('dist')
+          items={}
+          for filename in ('agent-execution-assurance-source-53f1d496.zip',
+                           'model_results.json','UNITTEST_3.13.log'):
+              data=(folder/filename).read_bytes()
+              items[filename]={'sha256':hashlib.sha256(data).hexdigest(),
+                               'size_bytes':len(data)}
+          payload={
+              'status':'DRAFT_ARCHIVE_NOT_ZENODO_RELEASED',
+              'repository':'https://github.com/vladislavnaidenkopro-code/agent-execution-assurance',
+              'source_commit':'53f1d4963d604b8d6e108386ebd2f4aebbd2daf6',
+              'model_results_canonical_digest':'107cd7814ed89696f2539373c25b027961d7382beb0aa3820933a73cca761f94',
+              'python_3_13_test_methods':104,
+              'files':items,
+              'restrictions':'Public synthetic research only. Not peer reviewed. No deployment guarantee. No new DOI.'
+          }
+          (folder/'SOURCE_ARCHIVE_MANIFEST.json').write_text(json.dumps(payload,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+          print(json.dumps(payload,sort_keys=True,indent=2))
+          PY
+      - name: Attach source snapshot for human Zenodo deposition
+        uses: actions/upload-artifact@v4
+        with:
+          name: vlads-reputation-frozen-source-53f1d496
+          path: |
+            dist/agent-execution-assurance-source-53f1d496.zip
+            dist/model_results.json
+            dist/UNITTEST_3.13.log
+            dist/SOURCE_ARCHIVE_MANIFEST.json
+          if-no-files-found: error
+          retention-days: 30
