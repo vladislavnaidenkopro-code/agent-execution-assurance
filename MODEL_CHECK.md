@@ -40,7 +40,7 @@ For each domain, the checks find (a) an ambiguity under baseline evidence even w
 - [RFC 9943, SCITT Architecture](https://www.rfc-editor.org/rfc/rfc9943) specifies transparency service/auditor roles and explicit compromise assumptions. This model is not a SCITT implementation or a claim of a missing standard feature.
 - [IETF HTTPAPI Idempotency-Key -08](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-idempotency-key-header-08) remains an **Internet-Draft** as of 29 October 2026. It discusses the key uniqueness, payload scope, expiry and server responsibilities relevant to bounding duplicate effects.
 
-The scientific contribution of this PR is the reproducible bounded **countermodel and scope correction**, not a new cryptographic primitive or theorem.
+- [Case, *Formal Theory: Structural Assurability* (2026)](https://doi.org/10.5281/zenodo.23003560) describes an independently published Lean 4 formalization involving claim-relative evidence capabilities and observational indistinguishability. This is relevant prior work; the present fixture does not claim priority over that theory.\n\nThe scientific contribution of this PR is the reproducible bounded **countermodel and scope correction**, not a new cryptographic primitive or theorem.
 
 ## Reproduction
 
