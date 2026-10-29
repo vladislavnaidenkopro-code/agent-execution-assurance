@@ -18,7 +18,6 @@ The earlier repository archive DOI [10.5281/zenodo.23775426](https://doi.org/10.
 - [Two-worker concurrency and linearization boundary](CONCURRENCY_GATE.md)
 - [Distinct primary vs downstream effect obligations](FANOUT_GATE.md)
 - [TextGrain provenance analysis (separate from scientific evidence)](TEXTGRAIN_PROVENANCE_REVIEW.md)
-- [Optional OWASP Agentic Evidence contribution gate (not submitted)](OWASP_CONTRIBUTION_GATE.md)
 
 ## Reproduce the entire experimental branch
 
@@ -30,7 +29,7 @@ python reproduce_results.py > model_results.json
 python reproduce_results.py --verify model_results.json
 ```
 
-The research branch currently contains **113 unittest methods** (plus parameterized subtests). GitHub Actions checks Python 3.10, 3.12, and 3.13. The seven OWASP candidate vectors are local experimental fixtures, **not an adopted OWASP format or contribution**. Passing CI and manifest checks establishes reproducibility of **specified finite semantics only**. Independently authored scientific review is outstanding.
+The research branch currently contains **104 unittest methods** (plus parameterized subtests). GitHub Actions checks Python 3.10, 3.12, and 3.13. Passing CI and manifest checks establishes reproducibility of **specified finite semantics only**. Independently authored scientific review is outstanding.
 
 ## Publication boundaries
 
