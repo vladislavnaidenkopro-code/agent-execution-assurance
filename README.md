@@ -1,10 +1,15 @@
 # Evidence-Limited Assurance for AI-Agent Execution
 
-**Author:** Vladislav Naidenko  
-**Scope:** Three standalone, manually constructed symbolic counterexamples. No private VLADS Future implementation is included.
+**Version 1.1 · Author: Vladislav Naidenko**
 
-Run: `python -m unittest discover -s . -p 'test_*.py' -v`
+A reproducible technical note on when agent-execution evidence is insufficient, when strengthened observations can establish a claim **within explicit trust assumptions**, and how residual risks restore ambiguity.
 
-These demonstrations do **not** establish security of deployed agents, a novel cryptographic primitive, independent peer review, or superiority over other tools.
+Read [ARTICLE.md](ARTICLE.md). Run all **10 unit-test methods** using Python 3 (standard library only):
 
-Article: CC BY 4.0 (see `LICENSE-ARTICLE.md`). Python source: MIT (see `LICENSE-CODE.txt`).
+```sh
+python -m unittest discover -s . -p 'test_*.py' -v
+```
+
+The repository includes three manually constructed counterexample pairs, three conditional-sufficiency scenarios, residual-risk examples and an `INCONSISTENT_EVIDENCE` verdict for impossible observations. These are symbolic finite-world demonstrations, **not implementations** of cryptographic verification, atomic commit, or authorization enforcement. The note has **not** undergone independent peer review.
+
+**Licenses:** Article CC BY 4.0 ([notice](LICENSE-ARTICLE.md)); Python source MIT ([license](LICENSE-CODE.txt)). No private VLADS Future implementation is included.
