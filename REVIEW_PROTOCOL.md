@@ -7,7 +7,8 @@
 1. Read [SCIENTIFIC_GATE.md](SCIENTIFIC_GATE.md): threat-model assumptions, the oracle-relative compatibility predicate, adversarial countermodels and original publication HOLD.
 2. Inspect the source files: `counterexamples.py`, `assurance_models.py`, `trace_assurance.py`, `exhaustive_assurance.py`, `retry_protocol_model.py`, `external_effect_model.py`, `external_effect_spec.py`, `external_effect_adversarial.py` and their tests.
 3. Review the **currently frozen review target by full Git commit SHA**, not a moving `main` or a DOI for an earlier code release. Record the SHA in the review.
-4. Read the prior works in the reference section below, then review the manuscript *after* it is updated to agree with the code, not the obsolete PDF v0.1.
+4. Inspect [CONCURRENCY_GATE.md](CONCURRENCY_GATE.md) and its finite interleaving generator. Independently analyze at least one two-worker trace and the claimed atomic invariant before accepting the source code's checks.
+5. Read the prior works in the reference section below, then review the manuscript *after* it is updated to agree with the code, not the obsolete PDF v0.1.
 
 ## Required falsification questions
 
@@ -23,6 +24,7 @@
 | R08 | Does the model omit relevant concurrency, multiple external effects, dedup expiry, key collisions, crash consistency, policy revocation and log equivocation? | List omitted-world classes and state which positive conclusions do not transfer without new assumptions. |
 | R09 | Is the contribution original relative to pre-existing observational-equivalence, dual-write/idempotency and transparency-log research? | Explicit novelty verdict: original result, reproducible explanatory countermodel, or only pedagogical synthesis; justify using primary sources. |
 | R10 | Does the manuscript cite the **same reviewed code version**? | Full commit SHA plus reproducible code archive/tag, CI command/results and a **new** software DOI after version freeze; separate DOI for final manuscript. |
+| R11 | Does the at-most-once claim survive concurrent workers with the same intent and key? | Reproduce the zero-crash check-then-effect race for 2, 3, and 4 workers; state the assumed linearization point for the atomic endpoint, the missing-effect hazard for reservation-before-effect, and excluded cross-system semantics. |
 
 ## Reproduction procedure
 
@@ -44,7 +46,7 @@ A written review should contain:
 
 - Reviewer name and relevant expertise (or a nonpublic, verifiable identification retained by the author); clear declaration of independence and conflicts of interest.
 - Exact code commit SHA, reproducibility environment, test results and whether a truly independent transition specification was implemented.
-- Per-ID R01–R10 assessments: **pass / major revision / cannot determine**, with evidence links and actionable proposed changes.
+- Per-ID R01–R11 assessments: **pass / major revision / cannot determine**, with evidence links and actionable proposed changes.
 - Explicit comments on each theorem-level assertion, whether proofs are valid within H and O, and whether H is sufficiently justified for the abstract/claims.
 - A novelty and publication-suitability conclusion; suggested venue only if warranted.
 - Author responses to all major objections, followed by an explicit reviewer decision after changes.
