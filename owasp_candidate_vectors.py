@@ -48,6 +48,7 @@ def _generated_trace(case_id, claim, basis, result, caveat):
     if result is None:
         raise AssertionError('No negative witness for ' + case_id)
     state, trace = result
+    measured = getattr(state, 'base', state)
     if not trace:
         raise AssertionError('Empty witness for ' + case_id)
     return {
@@ -58,9 +59,9 @@ def _generated_trace(case_id, claim, basis, result, caveat):
         'event_trace': list(trace),
         'expected_inference': 'CLAIM_REFUTED_WITHIN_BOUNDED_MODEL',
         'observed_terminal_counters': {
-            'remote_effects': getattr(state, 'remote_effects', None),
-            'downstream_effects': getattr(state, 'downstream_effects', None),
-            'local_done': getattr(state, 'local_done', None),
+            'remote_effects': getattr(measured, 'remote_effects', None),
+            'downstream_effects': getattr(measured, 'downstream_effects', None),
+            'local_done': getattr(measured, 'local_done', None),
         },
         'required_boundary': caveat
     }
