@@ -59,20 +59,23 @@ class EffectTrace:
 @dataclass(frozen=True)
 class RollbackTrace:
     committed_heads: Tuple[int, ...]
+    prior_local_head: int
     local_head: int
     witness_head: int
 
     def __post_init__(self):
         if self.committed_heads not in ((1,), (1, 2)) or self.local_head != 1:
             raise ValueError('The bounded example compares checkpoint 1 with 2')
+        if self.prior_local_head not in self.committed_heads:
+            raise ValueError('Prior local head must be an actual committed checkpoint')
         if self.witness_head not in (1, 2):
             raise ValueError('Unexpected witness head')
 
     def safe(self):
-        return self.local_head == max(self.committed_heads)
+        return self.local_head >= self.prior_local_head
 
     def trusted(self):
-        return self.witness_head == max(self.committed_heads)
+        return self.witness_head == self.prior_local_head
 
     def observe(self, enriched=False):
         base = ('log-head:1', 'local-witness:1')
@@ -111,8 +114,8 @@ def universes():
             EffectTrace(('e1', 'e2'), ('e1',)),
         ),
         'non_rollback': (
-            RollbackTrace((1,), 1, 1),
-            RollbackTrace((1, 2), 1, 2),
-            RollbackTrace((1, 2), 1, 1),
+            RollbackTrace((1,), 1, 1, 1),
+            RollbackTrace((1, 2), 2, 1, 2),
+            RollbackTrace((1, 2), 2, 1, 1),
         ),
     }
