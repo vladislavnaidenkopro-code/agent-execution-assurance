@@ -75,5 +75,31 @@ class RetryProtocolModelTests(unittest.TestCase):
         self.assertTrue(any(s.effects > 0 and not s.acknowledged for s in states))
 
 
+
+class InvariantAndBoundSensitivityTests(unittest.TestCase):
+    def test_atomic_inductive_marker_and_effect_count_invariant(self):
+        for crashes in (0, 1, 2):
+            for attempts in (1, 2, 3):
+                with self.subTest(crashes=crashes, attempts=attempts):
+                    states = explore('atomic', max_attempts=attempts, max_crashes=crashes)
+                    self.assertTrue(states)
+                    for state in states:
+                        self.assertEqual(state.effects, int(state.marker))
+                        for action, successor in successors(state, 'atomic', attempts, crashes):
+                            self.assertEqual(successor.effects, int(successor.marker))
+
+    def test_pre_mark_safety_persists_under_bounded_crashes(self):
+        for crashes in (0, 1, 2):
+            for attempts in (1, 2, 3):
+                with self.subTest(crashes=crashes, attempts=attempts):
+                    states = explore('mark_then_effect', max_attempts=attempts, max_crashes=crashes)
+                    self.assertTrue(all(state.effects <= int(state.marker) for state in states))
+
+    def test_post_mark_duplicate_requires_retry_after_crash(self):
+        no_crash = explore('effect_then_mark', max_attempts=3, max_crashes=0)
+        with_crash = explore('effect_then_mark', max_attempts=3, max_crashes=2)
+        self.assertTrue(all(state.effects <= 1 for state in no_crash))
+        self.assertTrue(any(state.effects >= 2 for state in with_crash))
+
 if __name__ == "__main__":
     unittest.main()
