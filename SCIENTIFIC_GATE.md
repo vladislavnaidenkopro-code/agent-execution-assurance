@@ -70,6 +70,14 @@ A new [finite interleaving checker](CONCURRENCY_GATE.md) explicitly explores 1�
 
 Independent review must now also cover [R11](REVIEW_PROTOCOL.md) on the exact concurrency/atomicity boundary. All model counts are abstract reachable-state cardinalities, not probabilities.
 
+## 3B. Primary commit versus downstream side-effect coverage
+
+The latest [fanout model](FANOUT_GATE.md) separates a legitimate primary effect P and a different authorized downstream effect D. A single user intent may legitimately require **both**. The appropriate safety claims are `P <= 1` and `D <= 1` separately, not `P+D <= 1`. This matters because a seemingly natural global effect-count bound would reject legitimate workflows.
+
+The bounded checker assumes the primary effect and local intent marker are atomically committed. Nevertheless, lost downstream acknowledgement followed by event redelivery yields `P=1,D=2` when the final downstream endpoint lacks a stable, effective idempotency boundary. Endpoint-side key expiry and crash before key persistence produce separate witnesses. The positive downstream result requires atomic effect+marker at the **final downstream endpoint**, immutable key scope and the absence of uncovered secondary effects. It does **not** follow from the primary transaction.
+
+Four bounded downstream grammars contain 10 / 10 / 20 / 17 abstract states. Sixteen test methods include BFS/DFS agreement, shortest trace replay, conditional positive controls, crash/expiry counterfactuals and explicit evidence that acknowledgement is not a global at-most-once proof. Reviewer [R12](REVIEW_PROTOCOL.md) requires independent inspection of the end-to-end effect coverage.
+
 ## 4. Claim-to-evidence contract
 
 | Scientific statement | Exact observation/assumption | Program evidence | Strength |
@@ -99,7 +107,7 @@ Relevant verified sources:
 ## 6. Publication gates after this change
 
 - **G1 — Mathematical claim scope:** Partially addressed by this document. The original manuscript `v0.1` must be rewritten to distinguish assumption-conditioned assurance from an actual evidence verifier and to separate safety, liveness and truthful acknowledgement.
-- **G2 — Finite-model cross-check:** New edge-level differential tests and mutation controls implemented. This is **same-author verification**, not external independence; additional concurrency and real remote-integration semantics remain unmodeled.
+- **G2 — Finite-model cross-check:** New edge-level differential tests and mutation controls implemented. This is **same-author verification**, not external independence; bounded concurrent workers and downstream effects are now modeled, but unbounded concurrency, multiple kinds of downstream fanout and real remote-integration semantics remain unmodeled.
 - **G3 — Prior-art and originality:** Citations cross-checked, but an exhaustive novelty study and external specialist assessment are pending.
 - **G4 — External critical review:** **OPEN / BLOCKING.** Must obtain an independent written review of threat-model completeness, proof obligations, claims, mathematics, and reproducibility.
 - **G5 — Frozen reviewed software and manuscript:** **OPEN / BLOCKING.** No new release or article DOI before review and version freeze.
