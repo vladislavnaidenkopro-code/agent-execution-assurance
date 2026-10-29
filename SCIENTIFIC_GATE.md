@@ -62,6 +62,14 @@ The model reaches `local_done=True` with `remote_effects=0`.
 
 These illustrate how weakening **different trust assumptions** falsifies **different positive claims**. Disabling both added actions reproduces the original graph (30 states). This is a bound-sensitive causal check, not a new impossibility theorem.
 
+## 3A. Parallel-worker threat expansion: no crash needed
+
+A new [finite interleaving checker](CONCURRENCY_GATE.md) explicitly explores 1–4 workers issuing the same intent/key. It falsifies an at-most-once claim when the endpoint separately checks absence, commits an effect, and records the idempotency key. The two-worker shortest path is four steps and requires **no failure**: first worker checks and commits; while its key is still absent, the second worker checks and commits. Three and four concurrent workers can likewise each commit once before any stores the key.
+
+**Positive claim is restricted:** under an assumed single linearizable operation atomically committing the ultimate remote effect and key, the model maintains `E = 1[K]`. Reservation-before-effect prevents duplicates but can lose execution if its reserving worker crashes. Neither result proves atomicity of a deployed external API, and the four-worker finite check is not an unbounded scheduler proof. [Herlihy–Wing (1990)](https://doi.org/10.1145/78969.78972) establishes the existing linearizability framework; no new theoretical priority is claimed.
+
+Independent review must now also cover [R11](REVIEW_PROTOCOL.md) on the exact concurrency/atomicity boundary. All model counts are abstract reachable-state cardinalities, not probabilities.
+
 ## 4. Claim-to-evidence contract
 
 | Scientific statement | Exact observation/assumption | Program evidence | Strength |
