@@ -35,7 +35,7 @@ def _world_pair(domain, claim, needed):
         'basis': 'exhaustive_assurance.py / ' + domain,
         'observed_weak_evidence': list(observed),
         'compatible_worlds': [
-            {'world': asdict(world), 'claim_true': world.safe(),
+            {'world': json.loads(json.dumps(asdict(world))), 'claim_true': world.safe(),
              'enriched_evidence': list(world.observe(True))}
             for world in pair
         ],
