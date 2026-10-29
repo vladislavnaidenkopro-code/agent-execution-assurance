@@ -51,7 +51,7 @@ python -m unittest discover -s . -p 'test_*.py' -v
 python -c "from exhaustive_assurance import model_check; [print(row) for row in model_check()]"
 ```
 
-The baseline has ten tests, the earlier trace-derived extension adds six, and this exhaustive extension adds ten: **26 unittest methods** (plus parameterized subtests). Matrix CI runs Python 3.10, 3.12, 3.13. Passing tests demonstrates consistency of the stated finite semantics only.
+The baseline has ten tests, the earlier trace-derived extension adds six, and this exhaustive extension adds ten: **26 unittest methods in the original finite-world subset** (plus parameterized subtests). The expanded research PR has 57 methods as of 29 October 2026 after the crash/retry and [external-effect boundary](EXTERNAL_EFFECT_BOUNDARY.md) models. Matrix CI runs Python 3.10, 3.12, 3.13. Passing tests demonstrates consistency of the stated finite semantics only.
 
 ## Publication boundary
 
