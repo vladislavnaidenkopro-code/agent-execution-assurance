@@ -17,9 +17,72 @@ jobs:
       matrix:
         python-version: ['3.10', '3.12', '3.13']
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Run symbolic-model tests
         run: python -m unittest discover -s . -p 'test_*.py' -v
+
+  frozen-source-package:
+    name: Frozen code evidence for preprint
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exactly reviewed software
+        uses: actions/checkout@v7
+        with:
+          ref: 53f1d4963d604b8d6e108386ebd2f4aebbd2daf6
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Prove immutable code identity and package
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "53f1d4963d604b8d6e108386ebd2f4aebbd2daf6"
+          mkdir -p dist
+          python -m unittest discover -s . -p 'test_*.py' -v > dist/UNITTEST_3.13.log 2>&1
+          grep -F "Ran 104 tests" dist/UNITTEST_3.13.log
+          python reproduce_results.py > dist/model_results.json
+          python reproduce_results.py --verify dist/model_results.json
+          python - <<'PY'
+          import json,hashlib,pathlib
+          data=json.loads(pathlib.Path('dist/model_results.json').read_text())
+          digest=hashlib.sha256(json.dumps(data,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()).hexdigest()
+          assert digest=='107cd7814ed89696f2539373c25b027961d7382beb0aa3820933a73cca761f94'
+          print('Evidence digest:',digest)
+          PY
+          git archive --format=zip --prefix=agent-execution-assurance-53f1d496/ -o dist/source-53f1d496.zip HEAD
+          unzip -t dist/source-53f1d496.zip | tail -1
+          python - <<'PY'
+          import json,hashlib,pathlib
+          d=pathlib.Path('dist')
+          items={}
+          for name in ('source-53f1d496.zip','model_results.json','UNITTEST_3.13.log'):
+              b=(d/name).read_bytes()
+              items[name]={'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b)}
+          manifest={'status':'SOURCE_SNAPSHOT_VERIFIED_NOT_RELEASED',
+                    'source_sha':'53f1d4963d604b8d6e108386ebd2f4aebbd2daf6',
+                    'data_digest':'107cd7814ed89696f2539373c25b027961d7382beb0aa3820933a73cca761f94',
+                    'test_methods':104,'files':items}
+          (d/'ARCHIVE_MANIFEST.json').write_text(json.dumps(manifest,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(manifest,indent=2,sort_keys=True))
+          PY
+      - name: Upload frozen research source for DOI release
+        uses: actions/upload-artifact@v4
+        with:
+          name: vlads-reputation-source-53f1d496
+          path: |
+            dist/source-53f1d496.zip
+            dist/model_results.json
+            dist/UNITTEST_3.13.log
+            dist/ARCHIVE_MANIFEST.json
+          if-no-files-found: error
+          retention-days: 30
