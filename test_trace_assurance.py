@@ -45,7 +45,7 @@ class TraceAssuranceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             EffectTrace(('e1', 'e2', 'e3'), ('e1',))
         with self.assertRaises(ValueError):
-            RollbackTrace((1, 3), 1, 1)
+            RollbackTrace((1, 3), 1, 1, 1)
 
 
 if __name__ == '__main__':
