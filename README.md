@@ -1,5 +1,7 @@
 # Evidence-Limited Assurance for AI-Agent Execution
 
+**Zenodo DOI:** [10.5281/zenodo.23775426](https://doi.org/10.5281/zenodo.23775426) (repository archive; confirm version metadata on Zenodo record).
+
 **Version 1.1 · Author: Vladislav Naidenko**
 
 A reproducible technical note on when agent-execution evidence is insufficient, when strengthened observations can establish a claim **within explicit trust assumptions**, and how residual risks restore ambiguity.
