@@ -58,6 +58,7 @@ class EffectTrace:
 
 @dataclass(frozen=True)
 class RollbackTrace:
+    """Scalar head non-decrease only; NOT full log prefix continuity."""
     committed_heads: Tuple[int, ...]
     prior_local_head: int
     local_head: int
@@ -72,6 +73,7 @@ class RollbackTrace:
             raise ValueError('Unexpected witness head')
 
     def safe(self):
+        # A same-height fork remains possible, as checked by PrefixContinuityTrace.
         return self.local_head >= self.prior_local_head
 
     def trusted(self):
@@ -113,7 +115,7 @@ def universes():
             EffectTrace(('e1', 'e2'), ('e1', 'e2')),
             EffectTrace(('e1', 'e2'), ('e1',)),
         ),
-        'non_rollback': (
+        'head_monotonicity': (
             RollbackTrace((1,), 1, 1, 1),
             RollbackTrace((1, 2), 2, 1, 2),
             RollbackTrace((1, 2), 2, 1, 1),
