@@ -8,7 +8,7 @@ The original symbolic fixtures assign `safe` to a history and assign its observa
 |---|---|---|---|---|
 | Execution-time authorization | Whether a `revoke` occurred before `commit` | Earlier grant and a receipt | Policy audit events | Complete authentic revocation audit; missing revocation reintroduces ambiguity |
 | At-most-once effects | Whether the intent committed at most one effect | Receipt for first effect | Ledger effect IDs | Ledger covers **every** committed effect; unlogged second effect reintroduces ambiguity |
-| Non-rollback | Whether local head equals maximum committed head | Local head and local witness | External witnessed head | Witness is fresh and unrollbackable; stale witness reintroduces ambiguity |
+| Non-rollback | Whether local head regresses below an earlier, actually attained local head | Local head and local witness | External witnessed head | Witness anchors the highest previously attained head of **this log**, and is fresh and unrollbackable; stale or equivocated witness reintroduces ambiguity |
 
 Each universe contains two histories satisfying its trust condition (one safe, one unsafe) and a third with incomplete/stale evidence. `classify` quantifies over histories compatible with the observer and chosen threat boundary, including a distinct `INCONSISTENT_EVIDENCE` case when none match.
 
