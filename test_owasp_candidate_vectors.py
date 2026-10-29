@@ -115,7 +115,8 @@ class EvidenceGapCandidateTests(unittest.TestCase):
         second = json.dumps(vectors(), sort_keys=True, separators=(',', ':'))
         self.assertEqual(first, second)
         self.assertEqual(json.loads(first), self.bundle)
-        self.assertNotIn('H:\\OPENAI_WORKSPACE', first)
+        self.assertNotIn('BEGIN PRIVATE KEY', first)
+        self.assertNotIn('AWS_SECRET_ACCESS_KEY', first)
         self.assertNotIn('production credentials', first.lower())
 
     def test_each_counterexample_is_explicitly_bounded(self):
