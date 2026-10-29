@@ -55,6 +55,22 @@ Here the shared key is recorded, both workers are no longer able to commit an ef
 
 **P3 (check-then-act counterexample).** The four-step witness above is a valid path of the transition relation ending at `E=2`. Therefore `E≤1` is **not invariant** in that mode. This is an existence counterexample, not an estimated failure rate.
 
+
+## Worker-count sensitivity (new)
+
+The initial comparison uses two workers, but the same finite grammar is now parameterized for **1–4 workers**, with the same stable shared key. All bounded schedules for each size are enumerated.
+
+| Workers | Check → effect → mark states | Reserve → effect states | Atomic effect + key states |
+| ---: | ---: | ---: | ---: |
+| 1 | 4 | 4 | 2 |
+| 2 | 17 | 12 | 4 |
+| 3 | 75 | 32 | 8 |
+| 4 | 337 | 80 | 16 |
+
+With one worker and no modeled crash, the check-then-effect mode has no duplicate-effect witness. For every checked count **n≥2**, there is a valid schedule in which all n workers read a missing key before any records it and each commits a separate effect. Thus the model reaches **E=n**; the at-most-once violation is not an artifact of exactly two workers.
+
+For the atomic mode, a direct inductive argument applies for **any finite n** under the defined atomic semantics: the only effect-increasing operation changes `(E,K)=(0,False)` to `(1,True)`; no worker may increase E while K is True. This is a mathematical invariant of the **abstract transition relation**, not a proof of a real endpoint or a deployed transaction boundary. Its bounded executable checks currently cover n=1,2,3,4; the counts `2^n` are state-space cardinalities for those checked values, not security probability or performance measures.
+
 ## Independent-check boundary
 
 The test suite performs: BFS exploration; a separately implemented DFS reachable-state walk; shortest witness replay; worker-renaming symmetry; explicit graph cardinalities; and exhaustive local successor checks for the atomic-mode invariant. These are meaningful regression checks but **share the same event semantics and authoring process**. Neither a separately authored TLA+ specification nor a qualified external research review has been completed.
