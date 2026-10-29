@@ -30,7 +30,7 @@ For each domain, the checks find (a) an ambiguity under baseline evidence even w
 - **Missing possible histories:** if H omits a valid unsafe history, an apparently unanimous ESTABLISHED verdict may become NOT_ESTABLISHED once that history is restored. A regression test explicitly exhibits this false confidence.
 - **Evidence-authenticity assumption:** omitted or fabricated policy/ledger entries and stale or equivocating checkpoints restore indistinguishability despite richer-looking evidence.
 - **No real assurance transfer:** the code assumes an atomic complete commit ledger, a trustworthy execution-time audit, and an independent non-rollbackable checkpoint. It does not establish any of these properties in software or hardware.
-- **Bounded state grammar:** two possible authorization traces, up to two effects, two head states, and two two-entry prefixes. No concurrency, adversarial scheduling, real cache lifetimes, distributed partition behavior, provenance attacks, fork consistency proofs, signature compromise, or unbounded histories.
+- **Bounded state grammar:** two possible authorization traces, up to two effects, two head states, and two two-entry prefixes. This **finite-world subsection** contains no concurrent agents, distributed partition behavior, real cache lifetimes, fork consistency proofs, cryptographic signatures, or unbounded histories. Separate branch modules now explore bounded concurrent workers, replay/expiry, compromised witnesses and downstream effects; none establishes a full real-system threat model.
 - **Identity vs height:** a log prefix comparison is stronger than a scalar index comparison. Actual constructions would need log-ID binding, cryptographic content commitments, and authenticated inclusion/consistency evidence with independent freshness.
 
 ## Relevant established mechanisms (not implemented here)
@@ -40,7 +40,9 @@ For each domain, the checks find (a) an ambiguity under baseline evidence even w
 - [RFC 9943, SCITT Architecture](https://www.rfc-editor.org/rfc/rfc9943) specifies transparency service/auditor roles and explicit compromise assumptions. This model is not a SCITT implementation or a claim of a missing standard feature.
 - [IETF HTTPAPI Idempotency-Key -08](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-idempotency-key-header-08) remains an **Internet-Draft** as of 29 October 2026. It discusses the key uniqueness, payload scope, expiry and server responsibilities relevant to bounding duplicate effects.
 
-- [Case, *Formal Theory: Structural Assurability* (2026)](https://doi.org/10.5281/zenodo.23003560) describes an independently published Lean 4 formalization involving claim-relative evidence capabilities and observational indistinguishability. This is relevant prior work; the present fixture does not claim priority over that theory.\n\nThe scientific contribution of this PR is the reproducible bounded **countermodel and scope correction**, not a new cryptographic primitive or theorem.
+- [Case, *Formal Theory: Structural Assurability* (2026)](https://doi.org/10.5281/zenodo.23003560) describes an independently published Lean 4 formalization involving claim-relative evidence capabilities and observational indistinguishability. This is relevant prior work; the present fixture does not claim priority over that theory.
+
+The scientific contribution of this PR is the reproducible bounded **countermodel and scope correction**, not a new cryptographic primitive or theorem.
 
 ## Reproduction
 
@@ -51,8 +53,8 @@ python -m unittest discover -s . -p 'test_*.py' -v
 python -c "from exhaustive_assurance import model_check; [print(row) for row in model_check()]"
 ```
 
-The baseline has ten tests, the earlier trace-derived extension adds six, and this exhaustive extension adds ten: **26 unittest methods in the original finite-world subset** (plus parameterized subtests). The expanded research PR has 57 methods as of 29 October 2026 after the crash/retry and [external-effect boundary](EXTERNAL_EFFECT_BOUNDARY.md) models. Matrix CI runs Python 3.10, 3.12, 3.13. Passing tests demonstrates consistency of the stated finite semantics only.
+The baseline has ten tests, the earlier trace-derived extension adds six, and this exhaustive extension adds ten: **26 unittest methods in the original finite-world subset** (plus parameterized subtests). The expanded Draft PR has **104 test methods** as of 29 October 2026 across all bounded extensions; refer to [REPRODUCIBILITY_GATE.md](REPRODUCIBILITY_GATE.md) and the current CI head before citing a number. The original 26-method subset remains an independently described experimental scope. Matrix CI runs Python 3.10, 3.12, 3.13. Passing tests demonstrates consistency of the stated finite semantics only.
 
 ## Publication boundary
 
-These findings should be reviewed in this branch before merging. The stable Zenodo DOI remains a reference to its original archived snapshot; any merged revision will need a distinct versioned release and Zenodo record if it is to be archived.
+These findings should be critically checked against [SCIENTIFIC_GATE.md](SCIENTIFIC_GATE.md), [PUBLICATION_ROUTE_2026.md](PUBLICATION_ROUTE_2026.md), and the author-approved manuscript before merging. The stable Zenodo DOI remains a reference to its original archived snapshot; any merged revision will need a distinct versioned release and Zenodo record if it is to be archived.
