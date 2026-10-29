@@ -1,3 +1,15 @@
+## Author's revised publication decision — 29 October 2026
+
+**Current paper:** prioritize a scientifically careful, reproducible **non-peer-reviewed technical report** and separate code archive. Finish internal claims/mathematical/bibliographic and reproducibility checks, obtain the named author's manuscript approval, freeze the exact code SHA, then prepare a distinct Zenodo paper record/DOI. Explore TechRxiv and arXiv only if appropriate, and present actual released work on GitHub / LinkedIn after publication. Do not present repository badges or preprint screening as independent academic peer review.
+
+**Journal track:** DEFERRED. No JOT formatting, editor correspondence, journal submission or external reviewer outreach now. At a later date, identify **a different, genuinely journal-suitable research question**, independently justify its novelty and target venue; do not force the present bounded counterexample study into a journal. That future venue will need its own eligibility and preprint-compatibility check. Journal review remains optional for the current work.
+
+**Publication gate:** no manuscript deposit or announcements before in-house scientific correction, frozen version reproducibility, appropriate AI-assistance disclosure and human-author sign-off. Existing v1.1.1 DOI is a previous code archive, not an identifier for the unreleased research branch.
+
+This decision supersedes the earlier conditional JOT-first sequence in the historical planning sections below. No messages or submissions have been sent.
+
+---
+
 # Publication strategy and venue compatibility — 29 October 2026
 
 **Status:** research planning document, NOT a journal submission, preprint or published paper. **No outreach or submission has been sent.**  
