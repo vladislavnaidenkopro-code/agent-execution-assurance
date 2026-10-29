@@ -95,5 +95,38 @@ class TwoWorkerInterleavingTests(unittest.TestCase):
             shortest_witness('atomic_effect_and_key', 'infinite_reliability')
 
 
+
+    def test_worker_count_sensitivity(self):
+        expected = {
+            1: (4, 4, 2),
+            2: (17, 12, 4),
+            3: (75, 32, 8),
+            4: (337, 80, 16),
+        }
+        for n, counts in expected.items():
+            with self.subTest(worker_count=n):
+                self.assertEqual(tuple(len(explore(mode, worker_count=n)) for mode in MODES),
+                                 counts)
+
+    def test_atomic_invariant_scales_from_one_to_four_workers(self):
+        for n in range(1, 5):
+            with self.subTest(worker_count=n):
+                states = explore('atomic_effect_and_key', worker_count=n)
+                self.assertEqual(len(states), 2 ** n)
+                self.assertTrue(all(s.effects == int(s.marker) for s in states))
+                self.assertIsNone(shortest_witness('atomic_effect_and_key',
+                                'at_most_once', worker_count=n))
+
+    def test_nonatomic_race_requires_at_least_two_workers(self):
+        self.assertIsNone(shortest_witness('check_then_effect_then_mark',
+                          'at_most_once', worker_count=1))
+        for n in (2, 3, 4):
+            with self.subTest(worker_count=n):
+                states = explore('check_then_effect_then_mark', worker_count=n)
+                self.assertTrue(any(s.effects == n for s in states))
+                self.assertIsNotNone(shortest_witness('check_then_effect_then_mark',
+                                     'at_most_once', worker_count=n))
+
+
 if __name__ == '__main__':
     unittest.main()
