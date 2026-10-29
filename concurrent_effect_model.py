@@ -20,7 +20,7 @@ class State:
 def transitions(state, mode):
     if mode not in MODES:
         raise ValueError('Unsupported mode')
-    if len(state.phases) != 2 or any(p not in PHASES for p in state.phases):
+    if not state.phases or any(p not in PHASES for p in state.phases):
         raise ValueError('Invalid worker phases')
     if not isinstance(state.marker, bool) or state.effects < 0:
         raise ValueError('Invalid durable state')
@@ -51,8 +51,10 @@ def transitions(state, mode):
     return tuple(result)
 
 
-def explore(mode):
-    initial = State()
+def explore(mode, worker_count=2):
+    if not isinstance(worker_count, int) or not 1 <= worker_count <= 8:
+        raise ValueError('Worker count must be an integer in [1, 8]')
+    initial = State(('ready',) * worker_count)
     queue = deque((initial,))
     paths = {initial: ()}
     while queue:
@@ -64,10 +66,10 @@ def explore(mode):
     return paths
 
 
-def shortest_witness(mode, claim):
+def shortest_witness(mode, claim, worker_count=2):
     if claim not in ('at_most_once', 'terminal_effect_exists', 'no_false_dedup'):
         raise ValueError('Unknown claim')
-    for state, path in explore(mode).items():
+    for state, path in explore(mode, worker_count=worker_count).items():
         if claim == 'at_most_once':
             violates = state.effects > 1
         elif claim == 'terminal_effect_exists':
