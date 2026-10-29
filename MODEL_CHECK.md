@@ -33,6 +33,15 @@ For each domain, the checks find (a) an ambiguity under baseline evidence even w
 - **Bounded state grammar:** two possible authorization traces, up to two effects, two head states, and two two-entry prefixes. No concurrency, adversarial scheduling, real cache lifetimes, distributed partition behavior, provenance attacks, fork consistency proofs, signature compromise, or unbounded histories.
 - **Identity vs height:** a log prefix comparison is stronger than a scalar index comparison. Actual constructions would need log-ID binding, cryptographic content commitments, and authenticated inclusion/consistency evidence with independent freshness.
 
+## Relevant established mechanisms (not implemented here)
+
+- [RFC 9162, Certificate Transparency v2](https://www.rfc-editor.org/rfc/rfc9162) specifies Merkle-based **consistency proofs** of append-only histories. It also discusses inconsistent views; neither a scalar size nor a local hash alone implements its security model.
+- [RFC 9942, COSE Receipts](https://www.rfc-editor.org/rfc/rfc9942) provides verifiable-data-structure proof formats, including inclusion and consistency proofs. A syntactically valid receipt does not by itself prove completeness of *all* agent-caused effects.
+- [RFC 9943, SCITT Architecture](https://www.rfc-editor.org/rfc/rfc9943) specifies transparency service/auditor roles and explicit compromise assumptions. This model is not a SCITT implementation or a claim of a missing standard feature.
+- [IETF HTTPAPI Idempotency-Key -08](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-idempotency-key-header-08) remains an **Internet-Draft** as of 29 October 2026. It discusses the key uniqueness, payload scope, expiry and server responsibilities relevant to bounding duplicate effects.
+
+The scientific contribution of this PR is the reproducible bounded **countermodel and scope correction**, not a new cryptographic primitive or theorem.
+
 ## Reproduction
 
 From a clean checkout of this PR branch:
