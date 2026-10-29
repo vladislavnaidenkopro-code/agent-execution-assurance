@@ -63,19 +63,19 @@ These are **conditional engineering proof obligations**, not implemented securit
 
 The companion `test_assurance_models.py` checks: baseline ambiguity, conditional establishment and refutation under enriched observations, multiple compatible safe histories, residual ambiguity after withdrawing trust, impossible observations, and an empty model. Combined with four earlier test methods, the package has **ten unittest methods**; each method may contain multiple subtests.
 
-### 11. Practical implications
+### 7. Practical implications
 An evidence verifier should distinguish (i) cryptographic validity of individual artifacts, (ii) evidence that an effect exists, (iii) authorization scoped to the actual action and time, (iv) completeness/freshness of observations, and (v) exactly-once or at-most-once per intent. A positive result must identify the premises that make it valid. Where evidence permits both safe and unsafe histories, reporting NOT_ESTABLISHED is more accurate than asserting security or asserting an attack occurred.
 
-### 7. Limitations and nonclaims
+### 8. Limitations and nonclaims
 - These examples demonstrate logical insufficiency under stated observations; they are not vulnerabilities in any named vendor or OWASP implementation.
 - The symbolic code is a teaching and regression fixture, not a secure receipt protocol, independent third-party benchmark, or cryptographic proof.
 - Independent originality review and format compatibility with OWASP are outstanding.
 - No private VLADS Future source, internal architecture, infrastructure addresses, or production telemetry are included.
 
-### 8. Reproducibility
+### 9. Reproducibility
 Use Python 3 standard library only. Clone this repository and run `python -m unittest discover -s . -p "test_*.py" -v`. The symbolic demonstrations are included here; no separate V34 fixture is needed. The examples are intentionally minimal and their claims are conditional on the chosen observations.
 
-### 9. Related work and originality boundary
+### 10. Related work and originality boundary
 This note is an educational synthesis, not a new impossibility theorem. It makes three established engineering boundaries concrete for agent-execution evidence:
 
 - **OWASP Agentic Evidence** centers evidence sufficiency, provenance, and the difference between observed records and independently verified claims. Our three synthetic pairs illustrate those boundaries; we do not claim the project is missing these principles. [1]
@@ -93,7 +93,7 @@ This note is an educational synthesis, not a new impossibility theorem. It makes
 [4] *COSE Receipts*, RFC 9942, https://www.rfc-editor.org/rfc/rfc9942 .
 [5] *SCITT Architecture*, RFC 9943, https://www.rfc-editor.org/rfc/rfc9943 .
 
-### 10. Review and scope
+### 11. Review and scope
 This is an author-approved technical note, not a peer-reviewed publication. The references are selective, not an exhaustive originality search. The examples are synthetic and do not evaluate a deployed system.
 
 **Article license:** Creative Commons Attribution 4.0 International (CC BY 4.0), https://creativecommons.org/licenses/by/4.0/ .
