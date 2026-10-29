@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: >-
+  Cite the exact Zenodo version DOI used for reproducibility.
+  The technical article is licensed CC BY 4.0; the accompanying
+  synthetic Python code is MIT licensed.
+type: software
+title: 'Evidence-Limited Assurance for AI-Agent Execution: Three Reproducible Counterexamples'
+authors:
+  - family-names: Naidenko
+    given-names: Vladislav
+repository-code: 'https://github.com/vladislavnaidenkopro-code/agent-execution-assurance'
+url: 'https://github.com/vladislavnaidenkopro-code/agent-execution-assurance'
+abstract: >-
+  Public, synthetic and bounded epistemic demonstrations of evidence
+  sufficiency for execution-time authorization, at-most-once effects,
+  and rollback detection. These models are not deployed security mechanisms
+  and the work has not undergone independent peer review.
+keywords:
+  - AI agent security
+  - execution assurance
+  - evidence sufficiency
+  - audit logs
+  - idempotency
