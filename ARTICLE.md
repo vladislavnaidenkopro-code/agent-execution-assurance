@@ -1,4 +1,7 @@
 # When Valid AI Agent Evidence Is Not Enough
+
+> **Historical note (v1.1, retained for reproducibility).** This document describes the original three-counterexample educational model and the 10-method test suite on the `main` branch. The **latest published corrected scientific preprint is v0.3.4**: [DOI 10.5281/zenodo.23817318](https://doi.org/10.5281/zenodo.23817318). Its 104-method finite-model research corpus belongs to the separately frozen source commit [`53f1d4963d604b8d6e108386ebd2f4aebbd2daf6`](https://github.com/vladislavnaidenkopro-code/agent-execution-assurance/tree/53f1d4963d604b8d6e108386ebd2f4aebbd2daf6) and archived [research software v1.2.0](https://doi.org/10.5281/zenodo.23783618), **not this historical article**. Neither paper has undergone independent peer review.
+
 ## Three reproducible counterexamples to overclaiming execution assurance
 
 **Status:** Public technical note, v1.1; independent peer review not performed  
